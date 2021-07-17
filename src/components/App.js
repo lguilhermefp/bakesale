@@ -1,44 +1,55 @@
-/* eslint-disable keyword-spacing */
-/* eslint-disable prettier/prettier */
 import React from 'react';
-import { fetchInitialDeals } from '../ajax';
+import {fetchInitialDeals} from '../ajax';
 import DealList from './DealList';
+import DealDetail from './DealDetail';
 
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 class App extends React.Component {
+  state = {
+    deals: [],
+    currentDealId: null,
+  };
 
-    state = {
-        deals: [],
-    };
-
-    async componentDidMount(){
-        const deals = await fetchInitialDeals();
-        this.setState({ deals });
+  async componentDidMount() {
+    const deals = await fetchInitialDeals();
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({deals});
+  }
+  setCurrentDeal = dealId => {
+    this.setState({
+      currentDealId: dealId,
+    });
+  };
+  currentDeal = () => {
+    return this.state.deals.find(deal => deal.key === this.state.currentDealId);
+  };
+  render() {
+    if (this.state.currentDealId) {
+      return <DealDetail initialDealData={this.currentDeal()} />;
     }
-
-    render(){
-        return(
-            <View style={styles.container}>
-                {
-                    this.state.deals.length > 0
-                        ? <DealList deals={this.state.deals} />
-                        : <Text style={styles.header}>Bakersale</Text>
-                }
-            </View>
-        );
+    if (this.state.deals.length > 0) {
+      return (
+        <DealList deals={this.state.deals} onItemPress={this.setCurrentDeal} />
+      );
     }
+    return (
+      <View style={styles.container}>
+        <Text style={styles.header}>Bakersale</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    header: {
-        fontSize: 40,
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    fontSize: 40,
+  },
 });
 
 export default App;
