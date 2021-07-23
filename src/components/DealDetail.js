@@ -13,11 +13,13 @@ class DealDetail extends Component {
   state = {
     deal: this.props.initialDealData,
   };
-  async componentDidMount(){
+  async componentDidMount() {
     const fullDeal = await ajax.fetchDealDetail(this.state.deal.key);
-    this.setState(() => ({
-      deal: fullDeal,
-    }));
+    this.onMount(function callback() {
+      this.setState(() => ({
+        deal: fullDeal,
+      }));
+    });
   }
   render() {
     const {deal} = this.state;
@@ -31,7 +33,15 @@ class DealDetail extends Component {
             <Text style={styles.price}>{priceDisplay(deal.price)}</Text>
           </View>
         </View>
-        <Text>...</Text>
+        {deal.user && (
+          <View>
+            <Image source={{uri: deal.user.avatar}} style={styles.avatar} />
+            <Text>{deal.user.name}</Text>
+          </View>
+        )}
+        <View>
+          <Text>{deal.description}</Text>
+        </View>
       </View>
     );
   }
@@ -68,6 +78,10 @@ const styles = StyleSheet.create({
   price: {
     flex: 1,
     textAlign: 'right',
+  },
+  avatar: {
+    width: 60,
+    height: 60,
   },
 });
 

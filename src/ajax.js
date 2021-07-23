@@ -10,7 +10,7 @@ export const fetchInitialDeals = async () => {
   }
 };
 
-export const fetchDealDetail = async(dealId) => {
+export const fetchDealDetail = async dealId => {
   try {
     const response = await fetch(apiHost + '/api/deals/' + dealId);
     const responseJson = await response.json();
@@ -18,4 +18,4 @@ export const fetchDealDetail = async(dealId) => {
   } catch (e) {
     console.error(e);
   }
-}
+};
