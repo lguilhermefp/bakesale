@@ -4,6 +4,7 @@ import propTypes from 'prop-types';
 import {View, Text, Image, StyleSheet} from 'react-native';
 
 import {priceDisplay} from '../util';
+import ajax from '../ajax';
 
 class DealDetail extends Component {
   static proptypes = {
@@ -12,6 +13,12 @@ class DealDetail extends Component {
   state = {
     deal: this.props.initialDealData,
   };
+  async componentDidMount(){
+    const fullDeal = await ajax.fetchDealDetail(this.state.deal.key);
+    this.setState(() => ({
+      deal: fullDeal,
+    }));
+  }
   render() {
     const {deal} = this.state;
     return (
